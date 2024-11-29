@@ -1,0 +1,5 @@
+
+
+class CTest_WASAPI {
+	
+};
