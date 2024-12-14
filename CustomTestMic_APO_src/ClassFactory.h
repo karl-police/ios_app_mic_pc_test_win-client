@@ -6,10 +6,10 @@
 class ClassFactory : public IClassFactory {
 public:
 	ClassFactory();
-	//~ClassFactory();
+	~ClassFactory();
 
 	// IUnknown
-	virtual HRESULT __stdcall QueryInterface(const IID& iid, void** ppv);
+	virtual HRESULT __stdcall QueryInterface(const IID& riid, void** ppv);
 	virtual ULONG __stdcall AddRef();
 	virtual ULONG __stdcall Release();
 
@@ -20,5 +20,5 @@ public:
 
 	static long lockCount;
 private:
-	long refCount;
+	long m_refCount;
 };

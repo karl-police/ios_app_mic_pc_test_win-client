@@ -146,10 +146,11 @@
   <ItemGroup>
     <ClCompile Include="ClassFactory.cpp" />
     <ClCompile Include="CustomTestMic_APO_DLL.cpp" />
+    <ClCompile Include="CustomTestMic_APO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClassFactory.h" />
-    <ClInclude Include="CustomTestMic_APO.hpp" />
+    <ClInclude Include="CustomTestMic_APO.h" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

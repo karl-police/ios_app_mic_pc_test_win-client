@@ -1,5 +1,5 @@
 #include "ClassFactory.h"
-#include "CustomTestMic_APO.hpp"
+#include "CustomTestMic_APO.h"
 #include "Resource.h"
 
 
@@ -8,7 +8,7 @@
 static HINSTANCE hInstance;
 
 // TODO: There are things that have a "_Ref_count_obj" instead of this?
-static LONG dll_refCount;
+//static LONG dll_refCount;
 
 
 
@@ -32,12 +32,12 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpRes
 
 
 // Functions to do things with the ref count
-static void IncrementRefCount() {
+/*static void IncrementRefCount() {
     InterlockedIncrement(&dll_refCount);
 }
 static void DecrementRefCount() {
     InterlockedDecrement(&dll_refCount);
-}
+}*/
 
 
 
@@ -53,7 +53,7 @@ HRESULT WINAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv) {
         return E_OUTOFMEMORY;
 
     // Increment Reference Count here
-    IncrementRefCount();
+    //IncrementRefCount();
 
     HRESULT hResult = factory->QueryInterface(riid, ppv);
     factory->Release();
@@ -63,8 +63,63 @@ HRESULT WINAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv) {
 
 
 
-// TODO: Yet I don't know the purpose of this.
+
+
+
+//===========================================================================
+//
+// DllRegisterServer
+//
+// Purpose: Called during setup or by regsvr32.
+//
+// Return:  NOERROR if registration successful, error otherwise.
+//===========================================================================
+HRESULT WINAPI DllRegisterServer() {
+    HRESULT hResult = RegisterAPO();
+
+    if (FAILED(hResult)) {
+        UnregisterAPO();
+        return hResult;
+    }
+}
+
+
+//===========================================================================
+//
+// DllUnregisterServer
+//
+// Purpose: Called when it is time to remove the registry entries.
+//
+// Return:  NOERROR if registration successful, error otherwise.
+//===========================================================================
+HRESULT WINAPI DllUnregisterServer() {
+    
+}
+
+
+
+//===========================================================================
+//
+// ::DllCanUnloadNow
+//
+// Purpose: Called periodically by OLE in order to determine if the
+//          DLL can be freed.
+//
+// Return: S_OK if there are no objects in use and the class factory 
+//          isn't locked.
+//
+//===========================================================================
 HRESULT WINAPI DllCanUnloadNow()
 {
-    return dll_refCount <= 0 ? S_OK : S_FALSE;
+    // It is okay to unload
+    // if there are no objects or locks on the ClassFactory.
+
+    // If there are issues, perhaps add refCount here as well somehow.
+
+    if (ClassFactory::lockCount == 0) {
+        return S_OK;
+    }
+    else {
+        return S_FALSE;
+    }
 }

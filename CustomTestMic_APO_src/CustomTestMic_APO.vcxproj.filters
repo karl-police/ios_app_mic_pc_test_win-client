@@ -21,12 +21,15 @@
     <ClCompile Include="ClassFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CustomTestMic_APO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CustomTestMic_APO.hpp">
+    <ClInclude Include="CustomTestMic_APO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ClassFactory.h">
