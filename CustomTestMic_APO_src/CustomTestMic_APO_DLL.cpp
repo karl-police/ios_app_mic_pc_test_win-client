@@ -1,9 +1,15 @@
-#include "ClassFactory.h"
-#include "CustomTestMic_APO.h"
-#include "Resource.h"
+// https://github.com/microsoft/Windows-driver-samples/tree/main/audio/sysvad/
+// https://github.com/TheFireKahuna/equalizerAPO64/blob/main/EqualizerAPO/DllMain.cpp
+// https://github.com/hoholee12/VirtualSurround-for-normal-headphones/blob/master/MinimalAPO/DllMain.cpp
+
 
 
 #define WIN32_LEAN_AND_MEAN
+
+#include "CustomTestMic_APO.h"
+#include "ClassFactory.h"
+#include "Resource.h"
+
 
 static HINSTANCE hInstance;
 
@@ -74,13 +80,16 @@ HRESULT WINAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv) {
 //
 // Return:  NOERROR if registration successful, error otherwise.
 //===========================================================================
-HRESULT WINAPI DllRegisterServer() {
-    HRESULT hResult = RegisterAPO();
+HRESULT WINAPI DllRegisterServer()
+{
+    HRESULT hResult = RegisterAPO(CustomTestMic_APO::regMainProperties);
 
     if (FAILED(hResult)) {
-        UnregisterAPO();
+        UnregisterAPO(CustomTestMic_APO_GUID);
         return hResult;
     }
+
+    return S_OK;
 }
 
 
@@ -92,8 +101,14 @@ HRESULT WINAPI DllRegisterServer() {
 //
 // Return:  NOERROR if registration successful, error otherwise.
 //===========================================================================
-HRESULT WINAPI DllUnregisterServer() {
-    
+HRESULT WINAPI DllUnregisterServer()
+{
+    HRESULT hr = UnregisterAPO(CustomTestMic_APO_GUID);
+
+    if (hr == NAP_E_MISSING_SOH)
+        return 0;
+
+    return hr;
 }
 
 
@@ -116,7 +131,7 @@ HRESULT WINAPI DllCanUnloadNow()
 
     // If there are issues, perhaps add refCount here as well somehow.
 
-    if (ClassFactory::lockCount == 0) {
+    if (ClassFactory::lockCount == 0 && CustomTestMic_APO::instCount == 0) {
         return S_OK;
     }
     else {

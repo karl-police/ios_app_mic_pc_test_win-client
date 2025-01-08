@@ -1,8 +1,8 @@
-#include "CustomTestMic_APO.hpp"
+#include "CustomTestMic_APO.h"
 #include "ClassFactory.h"
 
 
-
+long ClassFactory::lockCount = 0;
 
 ClassFactory::ClassFactory() {
 	m_refCount = 1;
@@ -41,7 +41,7 @@ ULONG __stdcall ClassFactory::Release()
 	if (InterlockedDecrement(&m_refCount) == 0)
 	{
 		delete this;
-		//return 0;
+		return 0;
 	}
 
 	return m_refCount;
